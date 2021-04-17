@@ -91,3 +91,27 @@ WHERE ord=1 AND movieid IN
 (SELECT movieid FROM casting
 JOIN actor ON actor.id=actorid
 WHERE name='Julie Andrews')
+
+/*13
+Obtain a list, in alphabetical order, of actors who've had at least 15 starring roles.
+ */
+SELECT name FROM actor
+JOIN casting ON (id = actorid AND (SELECT COUNT(ord) FROM casting WHERE actorid = actor.id AND ord=1)>=15)
+GROUP BY name
+
+/*14
+List the films released in the year 1978 ordered by the number of actors in the cast, then by title.
+ */
+ SELECT title, COUNT(actorid) as cast
+FROM movie JOIN casting on id=movieid
+WHERE yr = 1978
+GROUP BY title
+ORDER BY cast DESC, title
+
+/*15
+List all the people who have worked with 'Art Garfunkel'.
+ */
+ SELECT DISTINCT name FROM actor
+JOIN casting ON id=actorid
+WHERE movieid IN (SELECT movieid FROM casting JOIN actor ON (actorid=id AND name='Art Garfunkel')) AND name != 'Art Garfunkel'
+GROUP BY name
